@@ -20,7 +20,7 @@ list create_list(char *filename) {
         fscanf(data, "%d", &status[i]);
     }
     char **actions = malloc(nr * sizeof(char *));
-    actions[0] = "Inapoi";
+    actions[0] = "\033[31mInapoi\033[0m";
     char a[10];
     fgets(a, 100, data);
     for (int i = 1; i < nr; ++i) {
@@ -35,6 +35,12 @@ list create_list(char *filename) {
     l.status = status;
     l.filename = filename;
     l.tasks = actions;
+    FILE *output = fopen("output.txt", "w");
+    for (int i = 0; i < nr; ++i) {
+        fprintf(output, "%d\n", l.status[i]);
+        fprintf(output, "%s\n", l.tasks[i]);
+    }
+    fclose(output);
     return l;
 }
 
@@ -92,7 +98,7 @@ void DeleteList() {
     fscanf(data, "%d", &nr);
     if (nr == 0) {
         system("cls");
-        printf("-= Sterge Lista =-\n-=> Inapoi");
+        printf("\033[33m-= Sterge Lista =-\033[0m\n\033[34m-=> \033[0m\033[31mInapoi\033[0m");
         int no_action = 1;
         while (no_action) {
             Sleep(100);
@@ -105,7 +111,7 @@ void DeleteList() {
         char *a = malloc(sizeof(char) * 10);
         fgets(a, 100, data);
         free(a);
-        name[0] = "Inapoi";
+        name[0] = "\033[31mInapoi\033[0m";
         for (int i = 1; i < nr; ++i) {
             char *action = malloc(sizeof(char) * 100);
             fgets(action, 100, data);
@@ -115,9 +121,9 @@ void DeleteList() {
         int choice = 0;
         while (1) {
             system("cls");
-            printf("-= Sterge Lista =-\n");
+            printf("\033[33m-= Sterge Lista =-\033[0m\n");
             for (int i = 0; i < nr; ++i) {
-                if (choice == i) printf("-=> ");
+                if (choice == i) printf("\033[34m-=> \033[0m");
                 printf("%s\n", name[i]);
             }
             int no_action = 1;
@@ -168,20 +174,20 @@ int verify_format_nr(char *nr) {
 void AddList() {
     char filename[22];
     strcpy(filename, "Activitati ");
-    printf("-= Adauga Lista =-\nIntroduceti data (zz.ll.aaaa):\n");
+    printf("\033[33m-= Adauga Lista =-\033[0m\nIntroduceti data (\033[31mzz.ll.aaaa\033[0m):\n");
     char data[11];
     scanf("%s", data);
     while (verify_format_data(data) == 0) {
-        printf("Introduceti data (zz.ll.aaaa):\n");
+        printf("Introduceti data (\033[31mzz.ll.aaaa\033[0m):\n");
         scanf("%s", data);
     }
     strcat(filename, data);
-    printf("Introduceti nr de sarcini sau 0 pentru a iesi\n");
+    printf("Introduceti \033[31mnr de sarcini\033[0m sau \033[31m0 pentru a iesi\033[0m\n");
     int nr;
     char vf[10];
     scanf("%s", vf);
     while (verify_format_nr(vf) == 0) {
-        printf("Introduceti nr de sarcini sau 0 pentru a iesi\n");
+        printf("Introduceti \033[31mnr de sarcini\033[0m sau \033[31m0 pentru a iesi\033[0m\n");
         scanf("%s", vf);
     }
 
@@ -245,11 +251,11 @@ void open_list(char *filename) {
     int choice = 0;
     while (1) {
         system("cls");
-        printf("-= %s =-\n", filename);
+        printf("\033[33m-= %s =-\033[0m\n", filename);
         for (int i = 0; i < l.nr; ++i) {
-            if (choice == i) printf("-=> ");
-            if (l.status[i] == 1) printf("[x] ");
-            else if (l.status[i] == 0) printf("[] ");
+            if (choice == i) printf("\033[34m-=> \033[0m");
+            if (l.status[i] == 1) printf("\033[32m[x] \033[0m");
+            else if (l.status[i] == 0) printf("\033[32m[] \033[0m");
             printf("%s\n", l.tasks[i]);
         }
         int no_action = 1;
@@ -280,7 +286,9 @@ void Liste() {
     fscanf(data, "%d", &nr);
     if (nr == 0) {
         system("cls");
-        printf("-= Liste =-\n-=> Inapoi");
+        printf("\033[33m-= Liste =-\033[0m\n");
+        printf("\033[34m-=> \033[0m");
+        printf("\033[31mInapoi\033[0m");
         int no_action = 1;
         while (no_action) {
             Sleep(100);
@@ -293,7 +301,7 @@ void Liste() {
         char *a = malloc(sizeof(char) * 10);
         fgets(a, 100, data);
         free(a);
-        name[0] = "Inapoi";
+        name[0] = "\033[31mInapoi\033[0m";
         for (int i = 1; i < nr; ++i) {
             char *action = malloc(sizeof(char) * 100);
             fgets(action, 100, data);
@@ -303,9 +311,9 @@ void Liste() {
         int choice = 0;
         while (1) {
             system("cls");
-            printf("-= Liste =-\n");
+            printf("\033[33m-= Liste =-\033[0m\n");
             for (int i = 0; i < nr; ++i) {
-                if (choice == i) printf("-=> ");
+                if (choice == i) printf("\033[34m-=> \033[0m");
                 printf("%s\n", name[i]);
             }
             int no_action = 1;
@@ -335,10 +343,10 @@ void Liste() {
 }
 
 void display_menu(int action) {
-    printf("-= Meniu =-\n");
-    char text[4][20] = {{"Liste"}, {"Adauga Lista"}, {"Sterge Lista"}, {"Exit"}};
+    printf("\033[33m-= Meniu =-\033[0m\n");
+    char text[4][20] = {{"Liste"}, {"Adauga Lista"}, {"Sterge Lista"}, {"\033[31mExit\033[0m"}};
     for (int i = 0; i < 4; ++i) {
-        if (action == i) printf("-=> %s\n", text[i]);
+        if (action == i) {printf("\033[34m-=> \033[0m");printf("%s\n", text[i]);}
         else printf("%s\n", text[i]);
     }
 }
